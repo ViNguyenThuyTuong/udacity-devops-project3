@@ -42,10 +42,10 @@ jobs:
       - checkout
       - restore_cache: [frontend-build]
       - run:
-        name: Test Frontend
-        command: |
-          cd frontend
-          npm run test
+          name: Test Frontend
+          command: |
+            cd frontend
+            npm run test
                 
   test-backend:
     docker:
@@ -54,10 +54,10 @@ jobs:
       - checkout
       - restore_cache: [backend-build]
       - run:
-        name: Test Backend
-        command: |
-          cd backend
-          npm run test
+          name: Test Backend
+          command: |
+            cd backend
+            npm run test
 
 workflows:
   default:
