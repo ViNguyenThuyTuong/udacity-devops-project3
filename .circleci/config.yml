@@ -1,5 +1,21 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.12.5
+
+commands:
+    notify_slack_error:
+        steps:
+            - slack/notify:
+                event: fail
+                template: basic_fail_1
+
+    notify_slack_pass:
+        steps:
+            - slack/notify:
+                event: pass
+                template: basic_success_1
+
 jobs:
   build-frontend:
     docker:
@@ -17,6 +33,11 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
+      - slack/notify:
+          branch_pattern: .+
+          event: fail
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
 
   build-backend:
     docker:
@@ -34,6 +55,11 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - slack/notify:
+          branch_pattern: .+
+          event: fail
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
   
   test-frontend:
     docker:
@@ -47,6 +73,11 @@ jobs:
           command: |
             cd frontend
             npm run test
+      - slack/notify:
+          branch_pattern: .+
+          event: fail
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
                 
   test-backend:
     docker:
@@ -60,6 +91,11 @@ jobs:
           command: |
             cd backend
             npm run test
+      - slack/notify:
+          branch_pattern: .+
+          event: fail
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
 
   scan-frontend:
     docker:
@@ -75,6 +111,11 @@ jobs:
               ##npm install
               npm audit fix --audit-level=critical --force
               npm audit --audit-level=critical
+      - slack/notify:
+          branch_pattern: .+
+          event: fail
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
 
   scan-backend:
     docker:
@@ -90,6 +131,11 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+      - slack/notify:
+          branch_pattern: .+
+          event: fail
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
 
 workflows:
   default:
