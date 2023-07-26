@@ -66,11 +66,13 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      - restore_cache: 
+          keys: [frontend-build]
       - run:
           name: Validate Frontend
           command: |
               cd frontend
-              npm install
+              ##npm install
               npm audit fix --audit-level=critical --force
               npm audit --audit-level=critical
 
