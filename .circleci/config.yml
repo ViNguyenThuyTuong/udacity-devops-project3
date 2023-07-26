@@ -104,7 +104,6 @@ jobs:
           event: fail
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
-          context: slack
 
   scan-backend:
     docker:
@@ -125,22 +124,23 @@ jobs:
           event: fail
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
-  notify:
-    docker:
-      - image: 'cimg/base:stable'
-    steps:
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-          channel: $SLACK_DEFAULT_CHANNEL
-      - slack/notify:
-          branch_pattern: .+
-          event: pass
-          template: success_tagged_deploy_1
-          channel: $SLACK_DEFAULT_CHANNEL
 
 workflows:
-  send-notification:
+  default:
     jobs:
-      - notify:
+      - build-frontend
+          context: slack
+      - build-backend
+          context: slack
+      - test-frontend:
+          requires: [build-frontend]
+          context: slack
+      - test-backend:
+          requires: [build-backend]
+          context: slack
+      - scan-backend:
+          requires: [bui
+          context: slackld-backend]
+      - scan-frontend:
+          requires: [build-frontend]
           context: slack
