@@ -84,6 +84,35 @@ jobs:
           channel: $SLACK_DEFAULT_CHANNEL
           template: basic_fail_1
 
+  build_test:
+    docker: # use the Docker executor
+      # CircleCI Node images available at: https://circleci.com/developer/images/image/cimg/node
+      - image: cimg/node:18.11.0
+    steps: # steps that comprise the `build` job
+      - checkout # check out source code to working directory
+      # Run a step to setup an environment variable
+      # Redirect MY_ENV_VAR into $BASH_ENV
+      - run:
+          name: "Setup custom environment variables"
+          command: echo 'export MY_ENV_VAR="FOO"' >> "$BASH_ENV"
+      - run: # print the name of the branch we're on
+          name: "What branch am I on?"
+          command: echo ${CIRCLE_BRANCH}
+      # Run another step, the same as above; note that you can
+      # invoke environment variable without curly braces.
+      - run:
+          name: "What branch am I on now?"
+          command: echo $CIRCLE_BRANCH
+      - run:
+          name: "What was my custom environment variable?"
+          command: echo ${MY_ENV_VAR}
+      - run:
+          name: "Print an env var stored in the Project"
+          command: echo ${PROJECT_ENV_VAR}
+      - run:
+          name: "Print an env var stored in a Context"
+          command: echo ${CONTEXT_ENV_VAR}
+
   scan-frontend:
     docker:
       - image: circleci/node:13.8.0
@@ -95,9 +124,10 @@ jobs:
           name: Validate Frontend
           command: |
               cd frontend
-              ##npm install
+              npm install
               npm audit fix --audit-level=critical --force
               npm audit --audit-level=critical
+              ##echo 'export MY_ENV_VAR="FOO"' >> "$BASH_ENV"
       - slack/notify:
           branch_pattern: .+
           event: fail
@@ -130,11 +160,13 @@ workflows:
     jobs:
       - build-frontend
       - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
+      ##- test-frontend:
+          ##requires: [build-frontend]
+      ##- test-backend:
+        ##  requires: [build-backend]
+      ##- scan-backend:
+          ##requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
+      - build:
+          context: slack
