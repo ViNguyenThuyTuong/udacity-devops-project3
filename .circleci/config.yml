@@ -42,11 +42,6 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-      - slack/notify:
-          branch_pattern: .+
-          event: fail
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_fail_1
   
   test-frontend:
     docker:
@@ -60,11 +55,6 @@ jobs:
           command: |
             cd frontend
             npm run test
-      - slack/notify:
-          branch_pattern: .+
-          event: fail
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_fail_1
                 
   test-backend:
     docker:
@@ -78,11 +68,6 @@ jobs:
           command: |
             cd backend
             npm run test
-      - slack/notify:
-          branch_pattern: .+
-          event: fail
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_fail_1
 
   build_test:
     docker: # use the Docker executor
@@ -128,12 +113,6 @@ jobs:
               npm audit fix --audit-level=critical --force
               npm audit --audit-level=critical
               ##echo 'export MY_ENV_VAR="FOO"' >> "$BASH_ENV"
-      - slack/notify:
-          branch_pattern: .+
-          event: fail
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_fail_1
-          context: slack
 
   scan-backend:
     docker:
@@ -149,24 +128,19 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
-      - slack/notify:
-          branch_pattern: .+
-          event: fail
-          channel: $SLACK_DEFAULT_CHANNEL
-          template: basic_fail_1
 
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
+      #- build-frontend
+      #- build-backend
       ##- test-frontend:
           ##requires: [build-frontend]
       ##- test-backend:
         ##  requires: [build-backend]
       ##- scan-backend:
           ##requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - build:
+      #- scan-frontend:
+          #requires: [build-frontend]
+      - build_test:
           context: slack
