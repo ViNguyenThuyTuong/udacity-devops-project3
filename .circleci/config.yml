@@ -86,7 +86,7 @@ jobs:
 
   scan-frontend:
     docker:
-      - image: cimg/base:stable
+      - image: node:13.8-buster
     steps:
       - checkout
       - restore_cache: 
@@ -107,7 +107,7 @@ jobs:
 
   scan-backend:
     docker:
-      - image: cimg/base:stable
+      - image: node:13.8-buster
     steps:
       - checkout
       - restore_cache: 
