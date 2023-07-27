@@ -77,7 +77,7 @@ jobs:
   
   test-frontend:
     docker:
-      - image: node:13.8-buster
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache: 
@@ -95,7 +95,7 @@ jobs:
                 
   test-backend:
     docker:
-      - image: node:13.8-buster
+      - image: circleci/node:13.8.0
     steps:
       - checkout
       - restore_cache: 
