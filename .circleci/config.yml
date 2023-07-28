@@ -205,10 +205,10 @@ jobs:
           at: ~/
       - run:
           name: Install dependencies
+          working_directory: ./.circleci/ansible
           command: |
-            apk add --update ansible openssh-client tar gzip curl nodejs npm
-            pip install awscli
-            cat .circleci/ansible/inventory.txt
+            apk add --update ansible
+            ansible --version
       - run:
           name: Configure server
           command: |
