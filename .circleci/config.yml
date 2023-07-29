@@ -361,16 +361,20 @@ jobs:
             apk add --no-cache --upgrade bash
             pip install --upgrade pip
             pip install awscli
-      - create-env
       - run:
           name: Deploy backend
-          working_directory: ./.circleci/ansible
           command: |
-            #tar czf backend.tar.gz backend/
-            export ANSIBLE_HOST_KEY_CHECKING=false
-            ansible-playbook \
-                -i .circleci/ansible/inventory.txt \
-                .circleci/ansible/deploy-backend.yml
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            export ANSIBLE_HOST_KEY_CHECKING=False
+            ansible-playbook -i inventory.txt deploy-backend.yml
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
           when: on_fail
