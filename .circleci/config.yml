@@ -298,15 +298,17 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli
+      - image: circleci/node:14.18.1
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install AWS CLI dependencies
+          working_directory: /tmp
           command: |
-            yum install -y tar gzip curl
-            curl -sL https://rpm.nodesource.com/setup_10.x | bash -
-            yum install -y nodejs
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - attach_workspace:
           at: ~/
       - run:
@@ -362,7 +364,7 @@ jobs:
           name: Deploy backend
           working_directory: ./.circleci/ansible
           command: |
-            tar czf backend.tar.gz backend/
+            #tar czf backend.tar.gz backend/
             export ANSIBLE_HOST_KEY_CHECKING=false
             ansible-playbook \
                 -i .circleci/ansible/inventory.txt \
