@@ -398,7 +398,6 @@ jobs:
           name: Backend smoke test.
           command: |
             # Fetch and prepare the BACKEND_IP env var
-            chmod 400 devops_keypair3.pem
             export BACKEND_IP=$(aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
