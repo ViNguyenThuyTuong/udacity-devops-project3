@@ -213,7 +213,7 @@ jobs:
             command: |
               aws cloudformation deploy \
                 --template-file .circleci/files/frontend.yml \
-                --stack-name "udapeople-fe-${CIRCLE_WORKFLOW_ID:0:7}" \
+                --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
                 --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
                 --tags project=udapeople
         - run:
@@ -228,9 +228,9 @@ jobs:
             root: .
             paths:
               - ./.circleci/ansible/inventory.txt
-        - destroy-environment:
-            id: ${CIRCLE_WORKFLOW_ID:0:7}
-            when: on_fail
+        #- destroy-environment:
+         #   id: ${CIRCLE_WORKFLOW_ID:0:7}
+          #  when: on_fail
 
   configure-infrastructure:
     docker:
