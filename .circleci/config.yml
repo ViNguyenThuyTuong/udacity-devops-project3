@@ -387,7 +387,8 @@ jobs:
     docker:
       - image: python:3.7-alpine3.11
     steps:
-      - checkout 
+      - checkout
+      - create-env
       - run:
           name: Install dependencies
           command: |           
