@@ -3,10 +3,10 @@
     shell: env
 
   - name: "copy backend binaries"
-      become: yes
-      copy:
-        src: ../../backend/dist
-        dest: /home/ubuntu/uda_app
+    become: yes
+    copy:
+      src: ../../backend/dist
+      dest: /home/ubuntu/uda_app
 
   - name: "copy node_modules"
     become: yes
