@@ -242,7 +242,7 @@ jobs:
             - "d5:55:3b:b1:b3:f7:4c:bd:2e:a3:df:92:64:f3:44:77"
       # attach workspace
       - attach_workspace:
-          at: ~/
+          at: .
       - run:
           name: Install dependencies
           working_directory: ./.circleci/ansible
@@ -253,6 +253,7 @@ jobs:
       - run:
           name: Configure server
           command: |
+            cat .circleci/ansible/inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook \
               -i .circleci/ansible/inventory.txt \
@@ -270,7 +271,7 @@ jobs:
       - restore_cache:
           keys: [backend-build]
       - attach_workspace:
-          at: ~/
+          at: .
       - create-env
       - run:
           name: Run database migration
@@ -310,7 +311,7 @@ jobs:
             unzip awscliv2.zip
             sudo ./aws/install
       - attach_workspace:
-          at: ~/
+          at: .
       - run:
           name: Get backend url and setup environment variables
           command: |
@@ -354,7 +355,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["06:55:19:5c:75:9c:0c:fa:5e:f0:ed:c4:2b:35:ec:76"]
       - attach_workspace:
-          at: ~/
+          at: .
       - run:
           name: Install dependencies
           command: |
