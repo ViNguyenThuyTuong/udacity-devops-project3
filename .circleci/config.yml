@@ -455,7 +455,7 @@ jobs:
             cp $BASH_ENV workflowid.env
             cat workflowid.env
       - persist_to_workspace:
-          root: .
+          root: ~/
           paths:
             - workflowid.env
       - run:
@@ -477,7 +477,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: .
+          at: ~/
       - run:
           name: Install dependencies
           command: |
