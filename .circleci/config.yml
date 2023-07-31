@@ -34,7 +34,7 @@ commands:
       - run:
           name: Add env vars to .env file
           command: |
-            echo ENVIRONMENT=$ENVIRONMENT > "./backend/.env"
+            echo ENVIRONMENT=$ENVIRONMENT >> "./backend/.env"
             echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> "./backend/.env"
             echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> "./backend/.env"
             echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> "./backend/.env"
@@ -455,7 +455,7 @@ jobs:
             cp $BASH_ENV workflowid.env
             cat workflowid.env
       - persist_to_workspace:
-          root: ~/
+          root: .
           paths:
             - workflowid.env
       - run:
@@ -477,10 +477,12 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/
+          at: .
       - run:
           name: Install dependencies
           command: |
+            apk add --update ansible openssh-client tar gzip curl nodejs npm
+            apk add --no-cache --upgrade bash
             pip install --upgrade pip
             pip install awscli
       - run:
