@@ -109,6 +109,19 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
+      - run:
+          name: Compiled code will be retrieved by deploy-backend.yml 
+          command: |
+            mkdir /tmp/workspace/
+            cp ./backend/package.json /tmp/workspace/
+            cd backend/dist
+            tar -zcvf /tmp/workspace/backend.tar.gz ./
+            tar -zcvf ./../../backend.tar.gz ./
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - package.json
+            - backend.tar.gz
       - slack/notify:
           branch_pattern: .+
           event: fail
@@ -275,9 +288,12 @@ jobs:
       - create-env
       - run:
           name: Run database migration
+          no_output_timeout: 20m
           command: |
             cd ./backend
             pwd
+            npm i
+            sudo npm install pm2 -g
             npm run migrations > migrations_dump.txt
             cat ./migrations_dump.txt
       - run:
@@ -287,11 +303,11 @@ jobs:
             then
               echo "Database migration has been executed successfully"
               #curl -H "Content-Type: text/plain" -H "token: 7079126b-54c1-4ae1-b7cf-577d8a27c76f" --request PUT --data "success" https://api.memstash.io/values/DB_MIGRATION_STATUS_${CIRCLE_WORKFLOW_ID:0:7}
-              curl https://kvdb.io/6BNFfdHkgq2ZUXauJBQsC6/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl https://kvdb.io/6mg2XrhaS7eJnBfS4ShcFz/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             else
               echo "Database migration has failed, verify DB setup!"
               #curl -H "Content-Type: text/plain" -H "token: 7079126b-54c1-4ae1-b7cf-577d8a27c76f" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_STATUS_${CIRCLE_WORKFLOW_ID:0:7}
-              curl https://kvdb.io/6BNFfdHkgq2ZUXauJBQsC6/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '0'
+              curl https://kvdb.io/6mg2XrhaS7eJnBfS4ShcFz/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '0'
             fi
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
@@ -356,6 +372,10 @@ jobs:
           fingerprints: ["06:55:19:5c:75:9c:0c:fa:5e:f0:ed:c4:2b:35:ec:76"]
       - attach_workspace:
           at: .
+      - attach_workspace:
+          at: /tmp/workspace
+      - restore_cache:
+          key: backend-build
       - run:
           name: Install dependencies
           command: |
@@ -365,9 +385,9 @@ jobs:
             pip install awscli
       - run:
           name: Deploy backend
+          no_output_timeout: 20m
           command: |
             cd backend
-            npm install rsync
             npm i
             npm run build
             cd ..
