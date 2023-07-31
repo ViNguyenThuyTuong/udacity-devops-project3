@@ -49,7 +49,7 @@ commands:
             echo NODE_ENV=production >> "./backend/.env"
   
   revert-migrations:
-    description: Revert the last migration if successfully run in the current workflow.
+    description: Revert the last migration if not successfully run in the current workflow.
     parameters:
       when:
         type: string
@@ -60,9 +60,9 @@ commands:
           name: Revert migrations
           working_directory: ./backend
           command: |
-            SUCCESS=$(curl -H "token: 2a9e15d6-b9fa-4b1f-a5dc-e3b9643a9b63" --request GET https://api.memstash.io/values/DB_MIGRATION_<< parameters.id >>)
+            SUCCESS=$(curl --insecure https://kvdb.io/6mg2XrhaS7eJnBfS4ShcFz/migration_<< parameters.id >>)
             echo $SUCCESS
-            if [[ "$SUCCESS" == "success" ]]
+            if [[ "$SUCCESS" == "0" ]]
             then
               pwd
               ls -la
@@ -297,7 +297,7 @@ jobs:
             npm run migrations > migrations_dump.txt
             cat ./migrations_dump.txt
       - run:
-          name: Send database migration status to memstash
+          name: Send database migration status to kvdb
           command: |
             if grep "has been executed successfully" ./backend/migrations_dump.txt;
             then
@@ -425,7 +425,7 @@ jobs:
             echo ${URL} 
             if curl -s http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees | grep "Welcome"
             then
-              return 1
+              return 0
             else
               return 1
             fi
