@@ -256,10 +256,11 @@ jobs:
           at: .
       - run:
           name: Install dependencies
-          working_directory: ./.circleci/ansible
           command: |
-            apk add --update ansible
+            apk add --update ansible openssh-client tar gzip curl nodejs npm
+            pip install awscli
             ansible --version
+            cat .circleci/ansible/inventory.txt
       - create-env
       - run:
           name: Configure server
