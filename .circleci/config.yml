@@ -451,11 +451,13 @@ jobs:
           name: Store old WorkflowID for cleanup phase
           #working_directory: ./.circleci/files
           command: |
+            mkdir /tmp/workid/
             aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
               --no-paginate --output text >> workflowid.env
-            echo cp workflowid.env /tmp/
-            cat tmp/workflowid.env
+            cat workflowid.env
+            echo cp workflowid.env /tmp/workid/
+            cat /tmp/workid/workflowid.env
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -490,7 +492,7 @@ jobs:
       - run:
           name: Clean up old environment
           command: |
-            echo cat /tmp/workflowid.env >> $OldWorkflowID
+            echo cat /tmp/workid/workflowid.env >> $OldWorkflowID
             echo $OldWorkflowID
             CurrentWorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
 
