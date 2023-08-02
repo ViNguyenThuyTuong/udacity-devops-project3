@@ -492,8 +492,8 @@ jobs:
       - run:
           name: Clean up old environment
           command: |
-            echo cat .circleci/files/workflowid.txt >> $OldWorkflowID
-            echo $OldWorkflowID
+            cat .circleci/files/workflowid.txt
+            #echo $OldWorkflowID
             CurrentWorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
 
             if [[ "$CurrentWorkflowID" != "$OldWorkflowID" ]]
