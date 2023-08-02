@@ -454,9 +454,9 @@ jobs:
             mkdir /tmp/workid/
             aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text >> .circleci/file/workflowid.txt
-            cat .circleci/file/workflowid.txt
-            echo cp .circleci/file/workflowid.txt /tmp/workid/
+              --no-paginate --output text >> .circleci/files/workflowid.txt
+            cat .circleci/files/workflowid.txt
+            echo cp .circleci/files/workflowid.txt /tmp/workid/
             cat /tmp/workid/workflowid.txt
       - persist_to_workspace:
           root: /tmp
