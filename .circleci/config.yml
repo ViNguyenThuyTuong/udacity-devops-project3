@@ -290,7 +290,7 @@ jobs:
           name: Run database migration
           no_output_timeout: 20m
           command: |
-            cd ./backend
+            cd ./backend/src
             pwd
             npm i
             sudo npm install pm2 -g
@@ -453,9 +453,9 @@ jobs:
           command: |
             aws cloudformation \
               list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text >> ./workflowid.env
+              --no-paginate --output text >> workflowid.env
             echo cp workflowid.env /tmp/
-            cat /tmp/workflowid.env
+            cat tmp/workflowid.env
       - persist_to_workspace:
           root: /tmp
           paths:
