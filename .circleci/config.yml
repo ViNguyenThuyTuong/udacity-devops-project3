@@ -261,7 +261,6 @@ jobs:
             pip install awscli
             ansible --version
             cat .circleci/ansible/inventory.txt
-      - create-env
       - run:
           name: Configure server
           working_directory: ./.circleci/ansible
