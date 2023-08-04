@@ -246,6 +246,17 @@ jobs:
   configure-infrastructure:
     docker:
       - image: python:3.7-alpine3.11
+        environment:
+          PATH: "/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.local/bin"
+          TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+          TYPEORM_ENTITIES: $TYPEORM_ENTITIES
+          TYPEORM_HOST: $TYPEORM_HOST
+          TYPEORM_PORT: $TYPEORM_PORT
+          TYPEORM_USERNAME: $TYPEORM_USERNAME
+          TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+          TYPEORM_DATABASE: $TYPEORM_DATABASE
+          TYPEORM_MIGRATIONS: $TYPEORM_MIGRATIONS
+          TYPEORM_MIGRATIONS_DIR: $TYPEORM_MIGRATIONS_DIR
     steps:
       - checkout
       - add_ssh_keys:
@@ -261,11 +272,11 @@ jobs:
             pip install awscli
             ansible --version
             cat .circleci/ansible/inventory.txt
-      - create-env
       - run:
           name: Configure server
-          working_directory: ./.circleci/ansible
           command: |
+            create-env
+            cd .circleci/ansible
             cat inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook \
@@ -285,7 +296,6 @@ jobs:
           keys: [backend-build]
       - attach_workspace:
           at: .
-      - create-env
       - run:
           name: Run database migration
           no_output_timeout: 20m
@@ -493,7 +503,6 @@ jobs:
           name: Clean up old environment
           command: |
             source .circleci/files/workflowid.txt
-            #OldWorkflowID = $(cat .circleci/files/workflowid.txt)
             echo $OldWorkflowID
             CurrentWorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
 
@@ -530,6 +539,9 @@ workflows:
       - deploy-infrastructure:
           requires: [build-frontend, build-backend]
           #requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [main]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
