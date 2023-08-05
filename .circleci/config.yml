@@ -249,8 +249,7 @@ jobs:
     steps:
       - checkout
       - add_ssh_keys:
-          fingerprints: 
-            - "f0:c1:03:dc:90:19:f1:e9:fe:2e:a7:33:73:94:d0:35"
+          fingerprints: ["f0:c1:03:dc:90:19:f1:e9:fe:2e:a7:33:73:94:d0:35"]
       # attach workspace
       - attach_workspace:
           at: .
