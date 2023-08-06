@@ -293,7 +293,7 @@ jobs:
           name: Run database migration
           no_output_timeout: 20m
           command: |
-            cd ./backend/src
+            cd ./backend
             pwd
             npm i
             sudo npm install pm2 -g
