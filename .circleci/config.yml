@@ -45,6 +45,7 @@ commands:
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "./backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "./backend/.env"
             echo NODE_ENV=production >> "./backend/.env"
+            cat ./backend/.env
   
   revert-migrations:
     description: Revert the last migration if the job fail
