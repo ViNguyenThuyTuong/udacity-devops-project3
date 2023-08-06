@@ -273,6 +273,11 @@ jobs:
       #- destroy-environment:
        #   id: ${CIRCLE_WORKFLOW_ID:0:7}
         #  when: on_fail
+      - slack/notify:
+          branch_pattern: .+
+          event: fail
+          channel: $SLACK_DEFAULT_CHANNEL
+          template: basic_fail_1
 
   run-migrations:
     docker:
