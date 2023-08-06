@@ -34,7 +34,7 @@ commands:
       - run:
           name: Add env vars to .env file
           command: |
-            echo ENVIRONMENT=$ENVIRONMENT >> "./backend/.env"
+            echo ENVIRONMENT=production >> "./backend/.env"
             echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> "./backend/.env"
             echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> "./backend/.env"
             echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> "./backend/.env"
@@ -299,7 +299,7 @@ jobs:
             npm i
             sudo npm install pm2 -g
             npm run migrations > migrations_dump.txt
-            cat ./migrations_dump.txt
+            cat migrations_dump.txt
       - run:
           name: Send database migration status to kvdb
           command: |
@@ -499,7 +499,7 @@ jobs:
             echo $OldWorkflowID
             CurrentWorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
 
-            if [[ "$CurrentWorkflowID" != "$OldWorkflowID" && -z "$OldWorkflowID"]]
+            if [[ "$CurrentWorkflowID" != "$OldWorkflowID"]]
             then
               echo "$OldWorkflowID!=$CurrentWorkflowID => will delete old version"
 
