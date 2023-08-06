@@ -274,7 +274,6 @@ jobs:
             echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "./backend/.env"
             echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "./backend/.env"
             echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "./backend/.env"
-            cat inventory.txt
             cat ./backend/.env
             export ANSIBLE_HOST_KEY_CHECKING=False
             ansible-playbook \
@@ -530,8 +529,8 @@ workflows:
       #- test-frontend:
        #   requires: [build-frontend]
         #  context: slack
-      #- test-backend:
-       #   requires: [build-backend]
+      - test-backend:
+          requires: [build-backend]
         #  context: slack
       #- scan-backend:
        #   requires: [build-backend]
@@ -540,7 +539,7 @@ workflows:
        #   requires: [build-frontend]
         #  context: slack
       - deploy-infrastructure:
-          requires: [build-frontend, build-backend]
+          requires: [build-frontend, build-backend, test-backend]
           #requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
