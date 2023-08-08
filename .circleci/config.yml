@@ -108,19 +108,6 @@ jobs:
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
-      - run:
-          name: Compiled code will be retrieved by deploy-backend.yml 
-          command: |
-            mkdir /tmp/workspace/
-            cp ./backend/package.json /tmp/workspace/
-            #cd backend/dist
-            tar -zcvf /tmp/workspace/backend.tar.gz ./
-            tar -zcvf ./../../backend.tar.gz ./
-      - persist_to_workspace:
-          root: /tmp/workspace
-          paths:
-            - package.json
-            - backend.tar.gz
       - slack/notify:
           branch_pattern: .+
           event: fail
@@ -387,8 +374,6 @@ jobs:
           fingerprints: ["d5:55:3b:b1:b3:f7:4c:bd:2e:a3:df:92:64:f3:44:77"]
       - attach_workspace:
           at: .
-      - attach_workspace:
-          at: /tmp/workspace
       - restore_cache:
           key: backend-build
       - run:
@@ -402,12 +387,7 @@ jobs:
           name: Deploy backend
           no_output_timeout: 20m
           command: |
-            cd backend
-            npm i
-            npm run build
-            cd ..
-            # Zip the directory
-            tar -C backend -czvf artifact.tar.gz .
+            echo tar czf backend.tar.gz backend/
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
