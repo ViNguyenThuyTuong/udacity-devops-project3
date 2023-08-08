@@ -3,27 +3,27 @@
     shell: env
 
   - name: Copy compiled files
-    unarchive:
-      src: /root/project/backend.tar.gz
-      dest: /home/ubuntu/
+    ansible.builtin.copy:
+      src: /root/project/artifact.tar.gz 
+      dest: /home/ubuntu
+      owner: ubuntu
+      group: ubuntu
+      mode: 0755
 
-  - name: Build backend
-    ignore_errors: yes
+  - name: Copy backend
+    become: yes
     shell: |
-      cd /home/ubuntu/backend
-      npm i
-      npm run build
+      cd /home/ubuntu
+      mkdir backend
+      cd backend
+      tar -xvf /home/ubuntu/artifact.tar.gz
 
-  - name: Stop and delete already running server
-    ignore_errors: yes
-    shell: |
-      pm2 stop backend
-      pm2 delete backend
-
-  - name: Start server
-    become: true
-    shell: |
-      cd /home/ubuntu/backend
-      pm2 start npm --name backend -- start
-      pm2 ls
+  - name: "Build and Start application"
+  become: yes
+  shell: |
+    cd /home/ubuntu/backend
+    npm install
+    pm2 stop default
+    pm2 start npm -- start
+    pm2 ls
 
