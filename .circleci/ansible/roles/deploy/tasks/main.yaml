@@ -21,6 +21,13 @@
       src: /tmp/workspace/package.json
       dest: /home/ubuntu/app/
       owner: ubuntu
+      
+  - name: Build backend
+    ignore_errors: yes
+    shell: |
+      cd /home/ubuntu/backend
+      npm i
+      npm run build
 
   - name: "delete anything that might already be running"
     become: true
