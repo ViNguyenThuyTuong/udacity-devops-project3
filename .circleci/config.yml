@@ -387,7 +387,7 @@ jobs:
           name: Deploy backend
           no_output_timeout: 20m
           command: |
-            echo tar czf backend.tar.gz backend/
+            echo tar -C backend -czf artifact.tar.gz .
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
