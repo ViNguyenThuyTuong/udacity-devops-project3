@@ -4,7 +4,7 @@
 
   - name: Copy compiled files
     ansible.builtin.copy:
-      src: /root/project/artifact.tar.gz 
+      src: /tmp/workspace/backend.tar.gz 
       dest: /home/ubuntu
       owner: ubuntu
       group: ubuntu
@@ -16,7 +16,7 @@
       cd /home/ubuntu
       mkdir backend
       cd backend
-      tar -xvf /home/ubuntu/artifact.tar.gz
+      tar -xvf /home/ubuntu/backend.tar.gz
 
   - name: "Build and Start application"
     become: yes
