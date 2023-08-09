@@ -1,2 +1,4 @@
 Provide a URL to your public GitHub repository. [URL01]
 https://github.com/ViNguyenThuyTuong/udacity-devops-project3
+Provide the public URL for your S3 Bucket
+https://s3.console.aws.amazon.com/s3/buckets/udapeople-09e4b43?region=us-east-1&tab=objects
