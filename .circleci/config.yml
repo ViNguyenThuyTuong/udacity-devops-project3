@@ -184,6 +184,9 @@ jobs:
             npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
       - slack/notify:
           branch_pattern: .+
           event: fail
@@ -311,6 +314,9 @@ jobs:
               #curl -H "Content-Type: text/plain" -H "token: 7079126b-54c1-4ae1-b7cf-577d8a27c76f" --request PUT --data "failure" https://api.memstash.io/values/DB_MIGRATION_STATUS_${CIRCLE_WORKFLOW_ID:0:7}
               curl https://kvdb.io/6mg2XrhaS7eJnBfS4ShcFz/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '0'
             fi
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
           when: on_fail
