@@ -297,9 +297,7 @@ jobs:
           command: |
             cd backend
             pwd
-            u=$USER
-            echo 'user name $u'
-            sudo chown -R $u /home/$u/
+            sudo chown -R "$(id -u -n)" /home/"$(id -u -n)"/
             npm i
             echo "After npm i"
             sudo npm install pm2 -g
