@@ -297,7 +297,7 @@ jobs:
           command: |
             cd backend
             pwd
-            u="$USER"
+            u=$USER
             echo 'user name $u'
             sudo chown -R $u /home/$u/
             npm i
