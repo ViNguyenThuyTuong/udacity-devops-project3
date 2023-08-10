@@ -302,8 +302,8 @@ jobs:
             echo "After npm i"
             sudo npm install pm2 -g
             echo "After npm install pm2 -g"
-            npm run migrations >> migrations_dump.txt
-            cat migrations_dump.txt
+            sudo npm run migrations >> migrations_dump.txt
+            sudo cat migrations_dump.txt
       - run:
           name: Send database migration status to kvdb
           command: |
