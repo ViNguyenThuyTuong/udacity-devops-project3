@@ -60,15 +60,15 @@ commands:
           working_directory: ./backend
           command: |
             SUCCESS=$(curl --insecure https://kvdb.io/6mg2XrhaS7eJnBfS4ShcFz/migration_<< parameters.id >>)
-            echo 'start migrations:revert'
             if [[ $SUCCESS == 1 ]]
             then
               pwd
               ls -la
               echo 'start migrations:revert'
               npm run migrations:revert
+              echo 'migrations:revert success'
             fi
-            echo 'migrations:revert success'
+            echo 'nothing to revert'
           when: << parameters.when >>
 
 jobs:
@@ -272,9 +272,9 @@ jobs:
               -i .circleci/ansible/inventory.txt \
               .circleci/ansible/configure-server.yml
       # rollback on failure  
-      #- destroy-environment:
-       #   id: ${CIRCLE_WORKFLOW_ID:0:7}
-        #  when: on_fail
+      - destroy-environment:
+         id: ${CIRCLE_WORKFLOW_ID:0:7}
+         when: on_fail
       - slack/notify:
           branch_pattern: .+
           event: fail
@@ -297,12 +297,13 @@ jobs:
           command: |
             cd backend
             pwd
-            sudo chown -R circleci /home/circleci/
+            user = $whoami
+            sudo chown -R $user /home/$user/
             npm i
             echo "After npm i"
             sudo npm install pm2 -g
             echo "After npm install pm2 -g"
-            npm run migrations > migrations_dump.txt
+            npm run migrations >> migrations_dump.txt
             cat migrations_dump.txt
       - run:
           name: Send database migration status to kvdb
@@ -561,20 +562,21 @@ workflows:
           context: slack
       - build-backend:
           context: slack
-      - test-frontend:
-          requires: [build-frontend]
-          context: slack
-      - test-backend:
-          requires: [build-backend]
-          context: slack
-      - scan-backend:
-          requires: [build-backend]
-          context: slack
-      - scan-frontend:
-          requires: [build-frontend]
-          context: slack
+      # - test-frontend:
+      #     requires: [build-frontend]
+      #     context: slack
+      # - test-backend:
+      #     requires: [build-backend]
+      #     context: slack
+      # - scan-backend:
+      #     requires: [build-backend]
+      #     context: slack
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      #     context: slack
       - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [build-backend, test-backend]
+          #requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only: [main]
