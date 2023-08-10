@@ -14,8 +14,6 @@
     become: yes
     shell: |
       cd /home/ubuntu
-      mkdir backend
-      cd backend
       tar -xvf /home/ubuntu/backend.tar.gz
 
   - name: "Build and Start application"
