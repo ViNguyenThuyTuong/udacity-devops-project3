@@ -297,7 +297,7 @@ jobs:
           command: |
             cd backend
             pwd
-            user = $whoami
+            user = $(sudo whoami)
             sudo chown -R $user /home/$user/
             npm i
             echo "After npm i"
