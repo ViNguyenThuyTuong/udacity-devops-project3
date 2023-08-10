@@ -60,13 +60,15 @@ commands:
           working_directory: ./backend
           command: |
             SUCCESS=$(curl --insecure https://kvdb.io/6mg2XrhaS7eJnBfS4ShcFz/migration_<< parameters.id >>)
-            echo $SUCCESS
+            echo 'start migrations:revert'
             if [[ $SUCCESS == 1 ]]
             then
               pwd
               ls -la
+              echo 'start migrations:revert'
               npm run migrations:revert
             fi
+            echo 'migrations:revert success'
           when: << parameters.when >>
 
 jobs:
@@ -295,6 +297,7 @@ jobs:
           command: |
             cd backend
             pwd
+            sudo chown -R ubuntu /home/ubuntu/
             npm i
             echo "After npm i"
             sudo npm install pm2 -g
