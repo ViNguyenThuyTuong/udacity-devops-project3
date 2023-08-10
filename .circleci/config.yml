@@ -297,7 +297,7 @@ jobs:
           command: |
             cd backend
             pwd
-            sudo chown -R ubuntu /home/ubuntu/
+            sudo chown -R circleci /home/circleci/
             npm i
             echo "After npm i"
             sudo npm install pm2 -g
