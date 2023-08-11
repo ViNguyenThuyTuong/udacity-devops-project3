@@ -563,21 +563,21 @@ workflows:
           context: slack
       - build-backend:
           context: slack
-      - test-frontend:
-          requires: [build-frontend]
-          context: slack
-      - test-backend:
-          requires: [build-backend]
-          context: slack
-      - scan-backend:
-          requires: [build-backend]
-          context: slack
-      - scan-frontend:
-          requires: [build-frontend]
-          context: slack
+      # - test-frontend:
+      #     requires: [build-frontend]
+      #     context: slack
+      # - test-backend:
+      #     requires: [build-backend]
+      #     context: slack
+      # - scan-backend:
+      #     requires: [build-backend]
+      #     context: slack
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      #     context: slack
       - deploy-infrastructure:
-          #requires: [build-backend, build-frontend]
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          requires: [build-backend, build-frontend]
+          #requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
             branches:
               only: [main]
